@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Login Page";
+}
+    <div class="text-center">
+        <h1 class="display-4">Please log in to your account</h1>
+        <br /><br />
+        <h3>
+            To start to edit, update, add or delete talents, please register/signup and login to your account.
+            <br />
+            For non registered users/not logged on users. You only have limited access.
+        </h3>
+        <div class="text-center">
+            <button type="button" class="btn btn-primary btn-lg" onclick="location.href='@Url.Action("Index", "Home")'" style="margin:5px;">Click here to explore our system without logging in</button>
+        </div>
+        <br />
+
+        <form id="dataform" asp-antiforgery="true" asp-controller="Home" asp-action="Login">
+
+            <div class="wrap-input100 validate-input m-b-23" data-validate="StaffID is Required">
+                <label>User ID</label>
+                <input type="text" id="inputUserId" name="inputUserId" placeholder="Enter your User ID">
+            </div>
+
+            <div class="wrap-input100 validate-input" data-validate="Password is required">
+                <label>Password</label>
+                <input id="inputPassword" type="password" name="inputPassword" placeholder="Type your password">
+            </div>
+            <input class="input100" id="getURL" type="text" name="getURL" hidden>
+            @if (ViewBag.Message != "")
+            {
+                <div class="text-right p-t-8 p-b-31">
+                    <a class="text-danger">@ViewBag.Message</a>
+                </div>
+            }
+            <div class="text-right p-t-8 p-b-31">
+                <a href="#">
+                    <u>Forgot password?</u>
+                </a>
+                <br />
+                <a href="#">
+                    <u>Contact Administrator</u>
+                </a>
+            </div>
+            <div class="container-login100-form-btn">
+                <div class="wrap-login100-form-btn">
+                    <div class="login100-form-bgbtn"></div>
+                    <button class="btn btn-primary btn-lg" id="login">
+                        Login
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>

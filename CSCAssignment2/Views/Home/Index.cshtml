@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using System.Security.Claims
+@using CSCAssignment2.Services
+@{/*http://www.binaryintellect.net/articles/17ee0ba2-99bb-47f0-ab18-f4fc32f476f8.aspx How to access DI service*/}
+@{var identity = Context.User.Identity as ClaimsIdentity; }
+
+    <div class="text-center">
+        <h1 class="display-4">Welcome to The Life Time Talents </h1>
+        <br />
+        <br />
+        @if (identity.IsAuthenticated)
+        {
+                <h1>Start using our talent service now!</h1>
+                <h3>
+                Welcome back @identity.FindFirst("fullName").Value
+            </h3>
+                <div id="loader" class="loader loader-default is-active "></div>
+
+                <div class="text-right">
+                    <button type="button" class="btn btn-primary btn-lg" onclick="location.href='@Url.Action("CreateTalent", "Talents")'" style="margin:5px;">Create Talent +</button>
+                </div>
+                <br />
+
+                <table id="TheTalentsTable" class="display">
+                    <thead>
+                        <tr>
+                            <th>Talent Name</th>
+                            <th>Image Profile</th>
+                            <th>Talent Bio</th>
+                            <th>Reknown</th>
+                            <th>Short Name</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+                <div id="update"></div>
+
+                <div>
+                <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+            </div>
+        }
+        else
+        {
+            <h3>
+                To start to edit, update, add or delete talents, please register/signup and login to your account.
+                <br />
+                For non registered users/not logged on users. You only have limited access.
+            </h3>
+
+        }
+    </div>
+
+@section Scripts {
+    <script>
+        loadTalents();
+
+        function loadTalents() {
+            $.ajax({
+                method: 'GET',
+                url: '/api/talents/',
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                //Exit Loader when request is complete
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: (function (data) {
+                    var urlForCloudImage = "https://testbucketcscnew1.s3.amazonaws.com/";
+                    $dataTable = $('#TheTalentsTable').DataTable({
+                        data: data,
+                        columns: [
+                            { data: 'talentName' },
+                            {
+                                data: 'talentUrl',
+                                "width": "3%",
+                                "render": function (data, type, row, meta) {
+                                    return '<img src=' + urlForCloudImage + data + ' />';
+                                }
+                            },
+                            { data: 'talentBio' },
+                            { data: 'talentReknown' },
+                            { data: 'talentshortName' },
+                            {
+                                data: 'talentId',
+                                "width": "3%",
+                                "render": function (data, type, row, meta) {
+                                    return '<a href="/Talents/UploadTalents/' + data + '" class="btn btn-success btn-lg" style="border-radius: 8px;" type="button" data-toggle="tooltip" data-placement="top" title="Upload Profile Picture"><i class="fa fa-upload "></i></a>';
+                                }
+                            },
+                            {
+                                "width": "3%",
+                                data: 'talentId',
+                                "render": function (data, type, row, meta, ) {
+                                    return '<a href="/Talents/EditTalent/' + data + '" class="btn btn-info btn-lg" style="border-radius: 8px;" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pen"></i></a>';
+                                }
+                            },
+                            {
+                                "width": "3%",
+                                data: 'talentId',
+                                "render": function (data, type, row, meta) {
+                                    return '<a class="btn btn-danger btn-lg" style="border-radius: 8px;" type="button" data-toggle="modal" data-target="#confirm-submit" title="Delete"><i class="fa fa-trash" style="color: white;"></i></a>'; //Jinwah
+                                }
+                            }
+                        ],
+                        "info": true,
+                        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                        pageLength: 10
+                    });
+                })
+            }); //End of ajax().done() method
+        }
+    </script>
+}
+
+
+<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>

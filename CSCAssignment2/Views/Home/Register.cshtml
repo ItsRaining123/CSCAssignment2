@@ -1,0 +1,124 @@
+﻿@{
+    ViewData["Title"] = "Registration Page";
+}
+
+    <form id="dataForm">
+        <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="fullNameInput">Full name</label>
+            <div class="col-md-6">
+                <input type="text" id="fullNameInput" name="fullNameInput" class="form-control"
+                       placeholder="Full name" value="" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="userIDInput">Username</label>
+            <div class="col-md-6">
+                <input type="text" id="userIDInput" name="userIDInput" class="form-control"
+                       placeholder="userID" value="" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="roleIdInput">User type</label>
+            <div class="col-md-4">
+                <select type="text" id="roleIdInput" name="roleIdInput" class="form-control ">
+                    <option value="0">-- Select role --</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="password1Input">Password</label>
+            <div class="col-md-4">
+                <input type="password" id="password1Input" name="password1Input" class="form-control "
+                       placeholder="Password" value="" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="password2Input">Confirm Password</label>
+            <div class="col-md-4">
+                <input type="password" id="password2Input" name="password2Input" class="form-control "
+                       placeholder="El" value="" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-10 offset-2">
+                <a class="btn btn-secondary" href="/AccountCreation/ManageUsers">Cancel</a>
+                <input type="button" class="btn btn-primary" value="Save" id="saveButton" />
+            </div>
+        </div>
+    </form>
+
+@section Scripts  {
+    <script>
+        (function () {
+            setupRoleListBox();
+
+
+
+            jQuery('#saveButton').on('click', function () {
+
+                let collectedFullName = jQuery('#fullNameInput').val();
+                let collectedUserID = jQuery('#userIDInput').val();
+                let collectedPassword = jQuery('#password1Input').val();
+                let collectedRole = jQuery('#roleIdInput').val();
+
+
+                /* Create a new JavaScript class */
+                function WebFormData(inFullName, inUserId, inPassword, inRole) {
+                    this.fullName = inFullName;
+                    this.password = inPassword;
+                    this.userid = inUserId;
+                    this.roleId = inRole;
+                }//End of WebFormData class definition
+
+                //Create a object, webFormData by using WebFormData class
+                let webFormData = new WebFormData(collectedFullName,
+                    collectedUserID, collectedPassword, collectedRole);
+
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/API/Home/CreateUser',
+                    data: webFormData,
+                    datatype: 'application/json',
+                    contentType: 'application/x-www-form-urlencoded',
+                }).done(function (data) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'User successfully created'
+                    }).then(function () {
+                    window.location.href = "/Home/LoginPage";
+                });
+                    
+                }).fail(function (data) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Check your inputs!!'
+                    })
+                })
+            })//end of anonymous function//$('#saveButton').on()
+
+
+
+            function setupRoleListBox() {
+                return $.ajax({
+                    method: 'GET',
+                    url: '/API/Home/GetRoles',
+                    dataType: 'json'
+                }).done(function (data) {
+                    let roleList = data.records;
+                    for (let index = 0; index < roleList.length; index++) {
+                        $('#roleIdInput').append($('<option value="' + roleList[index].id + '">' + roleList[index].roleName + '</option>'));
+                    }//for
+                });
+            }//setupRoleListBox
+
+
+
+        })();
+    </script>
+}

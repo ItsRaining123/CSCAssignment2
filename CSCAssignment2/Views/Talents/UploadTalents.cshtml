@@ -1,0 +1,68 @@
+﻿<body>
+    <div class="container">
+        <h1></h1>
+        <form>
+            <h2>Create Talent</h2>
+
+            <h2>Upload Image</h2>
+            <dd>
+                <input id="photo" type="file"
+                       name="photo" />
+            </dd>
+            <br />
+            <img src="" id="preview">
+            <br />
+            <br />
+            <input id="submit" type="button" value="Submit" name="Upload" />
+            <br />
+            <br />
+            <div id="loader" style="margin-top:10px; display:none;" role="status">
+                <img src="~/Scripts/ajax-loader.gif" />
+            </div>
+            <p id="link"></p>
+            <br />
+            <p id="link2"></p>
+        </form>
+    </div>
+
+</body>
+
+@section scripts {
+
+    <script type="text/javascript">
+
+        const ID = getIdFromAddressBar();
+
+        function getIdFromAddressBar() {
+            let urlArray = window.location.href.split('/');
+            let id = urlArray[urlArray.length - 1];
+            return id;
+        };//End of getIdFromAddressBar
+
+        $(document).ready(function () {
+            $('#submit').click(function () {
+                var data = new FormData();
+                var imageFile = document.getElementById("photo").files[0];
+                data.append('photo', imageFile);
+                $.ajax({
+                    url: '/api/Talents/UploadFile/' + ID,
+                    processData: false,
+                    contentType: false,
+                    data: data,
+                    method: "POST"
+                }).done(function data() {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Successfully uploaded profile picture for user',
+                        icon: 'success'
+                    }).then(function () {
+                        window.location.href = "/Talents/ViewTalents";
+                    });
+                }).fail(function data() {
+                    console.log("test2");
+                });
+            });
+        });
+
+    </script>
+}
