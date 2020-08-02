@@ -5,8 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="javascript\**" />
+    <Content Remove="javascript\**" />
+    <EmbeddedResource Remove="javascript\**" />
+    <None Remove="javascript\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Helpers\" />
-    <Folder Include="javascript\" />
   </ItemGroup>
 
   <ItemGroup>
