@@ -58,7 +58,12 @@
                     }).then(function () {
                         window.location.href = "/Talents/ViewTalents";
                     });
-                }).fail(function data() {
+                }).fail(function (data) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.responseJSON.message,
+                        icon: 'error'
+                    });
                     console.log("test2");
                 });
             });

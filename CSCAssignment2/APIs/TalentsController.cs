@@ -138,7 +138,7 @@ namespace CSCAssignment2.APIs
                     concepts = double.Parse(response.Get().Data.Select(c => $"{c.Value}").LastOrDefault());
                     //var concepts1 = response.Get().Data.Select(c => $"{c.Name}: {c.Value}");
 
-                    if (concepts >= 0.85)
+                    if (concepts >= 0.85) //return BadRequest if image has >85% rate of being NSFW
                     {
                         return BadRequest(new { message = "The image you uploaded is Not Safe For Work (NSFW)" });
                     } else
