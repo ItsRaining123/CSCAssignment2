@@ -1,0 +1,20 @@
+
+{
+    "region" : "us-east-1",
+    "configuration" : "Debug",
+    "framework"     : "netcoreapp3.1",
+    "self-contained" : false,
+    "application"    : "CSCAssignment2",
+    "environment"    : "CSCAssignment2-test",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-b7e8228f\";\"aws:ec2:vpc,Subnets\"=\"subnet-d753f4f6\"",
+    "solution-stack"       : "64bit Amazon Linux 2 v1.0.0 running .NET Core",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "cscassignment2-test",
+    "instance-type"        : "t3a.medium",
+    "key-pair"             : "",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}
