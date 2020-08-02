@@ -17,6 +17,9 @@ using Amazon.S3.Model;
 using Amazon.Runtime;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Clarifai.API;	
+using Clarifai.DTOs.Inputs;	
+using Clarifai.DTOs.Predictions;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -266,8 +269,24 @@ namespace CSCAssignment2.APIs
 
                     information.TalentImageURL = photo.FileName;
                     
-                    _database.Talents.Update(information);
-                    _database.SaveChanges();
+                    //Check for NSFW image using Clarifai
+                    var clientClarifai = new ClarifaiClient("1e765fbf24954a2b909d0259e0087945");
+                    var response = await clientClarifai.PublicModels.NsfwModel
+                        .Predict(new ClarifaiURLImage("https://testbucketcscnew1.s3.amazonaws.com/" + photo.FileName))
+                        .ExecuteAsync();
+
+                    double concepts = 0;
+                    concepts = double.Parse(response.Get().Data.Select(c => $"{c.Value}").LastOrDefault());
+                    //var concepts1 = response.Get().Data.Select(c => $"{c.Name}: {c.Value}");
+
+                    if (concepts >= 0.85) //return BadRequest if image has >85% rate of being NSFW
+                    {
+                        return BadRequest(new { message = "The image you uploaded is Not Safe For Work (NSFW)" });
+                    } else
+                    {
+                        _database.Talents.Update(information);
+                        _database.SaveChanges();
+                    } 
 
                 }
                 catch (Exception ex)
