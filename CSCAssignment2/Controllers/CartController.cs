@@ -6,17 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CSCAssignment2.Controllers
 {
-    public class PaymentsController : Controller
+    public class CartController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult Prices()
-        {
-            return View();
-        }
-        public IActionResult Account()
+        public IActionResult OrderStatus()
         {
             return View();
         }

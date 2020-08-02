@@ -1,5 +1,168 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿<body>
+    <h1></h1>
+    <h2>Create Talent</h2>
+    <form id="dataForm">
+        <div class="form-group form-group-lg col-md-12">
+            <label for="fullNameInput">Talent Name *</label>
+            <br />
+            <input type="text" class="form-control" id="nameInput" name="nameInput" />
+        </div>
+        <div class="form-group form-group-lg col-md-12">
+            <label for="staffIdInput">
+                Short Name *
+            </label>
+            <br />
+            <input type="text" class="form-control" id="shortNameInput" name="shortNameInput" />
+        </div>
+        <div class="form-group form-group-lg col-md-12">
+            <label for="departmentInput">
+                Bio *
+            </label>
+            <br />
+            <input type="text" class="form-control" id="bioInput" name="bioInput" />
+        </div>
+
+        <div class="form-group form-group-lg col-md-12">
+            <label for="roleInput">
+                Reknown *
+            </label>
+            <input type="text" class="form-control" id="reknownInput" name="reknownInput" />
+
+        </div>
+
+        <div class="form-group col-md-12">
+            <div>
+                <button type="button" class="btn btn-light"
+                        onclick="location.href='/Talents/ViewTalents'">
+                    Cancel
+                </button>
+                <button type="reset" id="resetButton" class="btn btn-secondary">
+                    Reset
+                </button>
+                <input type="button" name="btn" value="Create" id="createButton" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+
+    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body w-100 text-center">
+                    <!-- We display the details entered by the user here -->
+                    <h1><strong class="text-dark">Create Talent</strong></h1>
+                    <br />
+                    <h4 id="modalName" style="margin: 0 auto;"></h4>
+                    <br />
+                    <h4 id="modalShortName" style="margin: 0 auto;"></h4>
+                    <br />
+                    <h4 id="modalBio" style="margin: 0 auto;"></h4>
+                    <br />
+                    <h4 id="modalReknown" style="margin: 0 auto;"></h4>
+                    <br />
+                    <br />
+                    <br>
+                    <button type="button" class="btn btn-lg mr-5 btn-outline-dark" data-dismiss="modal">Cancel</button>
+                    <button id="modalCreateButton" type="submit" class="btn btn-danger btn-lg" data-dismiss="modal">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    <style>
+        .error {
+            font-size: 15px;
+            color: red;
+        }
+    </style>
+
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+
+    <script>
+        $('#dataForm').validate({
+            rules: {
+                nameInput: {
+                    required: true,
+                },
+                shortNameInput: {
+                    required: true,
+                },
+                bioInput: {
+                    required: true,
+                },
+                reknownInput: {
+                    required: true,
+                }
+            },
+            messages: {
+                nameInput: {
+                    required: 'This field is required.',
+                },
+                shortNameInput: {
+                    required: 'This field is required',
+                },
+                bioInput: {
+                    required: 'This field is required',
+                },
+                reknownInput: {
+                    required: 'This field is required',
+                }
+            }
+        });
+
+        (function () {
+            jQuery('#createButton').on('click', function () {
+                /* when the button in the form, display the entered values in the modal */
+                $('#modalName').text($('#nameInput').val());
+                $('#modalShortName').text($('#shortNameInput').val());
+                $('#modalBio').text($('#bioInput').val());
+                $('#modalReknown').text($('#reknownInput').val());
+            });
+        })();
+
+        (function () {
+            jQuery('#modalCreateButton').on('click', function () {
+
+                let collectedName = jQuery('#nameInput').val();
+                let collectedShortName = jQuery('#shortNameInput').val();
+                let collectedBio = jQuery('#bioInput').val();
+                let collectedReknown = jQuery('#reknownInput').val();
+
+                /* Create a new JavaScript class */
+                function WebFormData(inName, inShortName, inBio, inReknown) {
+                    this.name = inName;
+                    this.shortName = inShortName;
+                    this.bio = inBio;
+                    this.reknown = inReknown;
+                }//End of WebFormData class definition
+
+                //Create a object, webFormData by using WebFormData class
+                let webFormData = new WebFormData(collectedName,
+                    collectedShortName, collectedBio, collectedReknown);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/API/Talents/TalentCreate',
+                    data: webFormData,
+                    datatype: 'application/json',
+                    contentType: 'application/x-www-form-urlencoded',
+                }).done(function (data) {
+                    alert(data.message)
+
+                    setTimeout(function () {
+                        window.location.href = "/Talents/ViewTalents";
+                    }, 1000);
+                }).fail(function (data) {
+                    if (data.responseJSON) {
+                        alert(data.responseJSON.message);
+                    } else {
+                        alert("Error");
+                    }
+                })
+
+            })//end of anonymous function//$('#modalCreateButton').on()
+        })();
+
+    </script>
 }
