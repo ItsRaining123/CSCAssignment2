@@ -12,7 +12,7 @@ using CSCAssignment2.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace dotnet.Controllers
+namespace CSCAssignment2.APIs
 {
     public class PaymentsController : Controller
     {
@@ -42,10 +42,11 @@ namespace dotnet.Controllers
             };
             var service = new CustomerService();
             var customer = service.Create(options);
-            return new CreateCustomerResponse
+            var customerResponse = new CreateCustomerResponse
             {
                 Customer = customer,
             };
+            return customerResponse;
         }
 
         [HttpPost("create-subscription")]

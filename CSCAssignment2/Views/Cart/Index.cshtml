@@ -1,0 +1,44 @@
+﻿<script src="https://js.stripe.com/v3/"></script>
+<script src="~/js/script.js"></script>
+
+
+<h2>Subscribe to The Life Time Talents!</h2>
+
+<form action="/cart/Subscribe" method="post" id="payment-form">
+    <div class="form-row">
+        <label for="card-element">
+        </label>
+        <div id="card-element">
+            <!-- A Stripe Element will be inserted here. -->
+        </div>
+
+        <!-- Used to display Element errors. -->
+        <div id="card-errors" role="alert"></div>
+    </div>
+
+    <button>Subscribe</button>
+</form>
+
+<br />
+
+<form action="/cart/Pause" method="post" id="payment-form">
+    <button>Pause Subscription Plan</button>
+</form>
+
+<br />
+
+<form action="/cart/Resume" method="post" id="payment-form">
+    <button>Resume Subscription Plan</button>
+</form>
+
+<br />
+
+<form action="/cart/Refund" method="post" id="payment-form">
+    <button>Get Refund</button>
+</form>
+
+<br />
+
+<form action="/cart/Cancel" method="post" id="payment-form">
+    <button>Cancel Subscription Plan</button>
+</form>

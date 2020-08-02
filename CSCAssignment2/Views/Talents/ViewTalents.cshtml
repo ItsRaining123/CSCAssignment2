@@ -1,45 +1,70 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
-}
+@{ }
 
-    <div class="text-center">
-        <h1 class="display-4">Welcome to The Life Time Talents </h1>
-        <h2>Start using our talent service now!</h2>
+<div class="text-center">
+    <h1 class="display-4">Welcome to The Life Time Talents </h1>
+    <h2>Start using our talent service now!</h2>
 
-        <div id="loader" class="loader loader-default is-active "></div>
+    <div id="loader" class="loader loader-default is-active "></div>
 
-        <div class="text-right">
-            <button type="button" class="btn btn-primary btn-lg" onclick="location.href='@Url.Action("CreateTalent", "Talents")'" style="margin:5px;">Create Talent +</button>
-        </div>
-        <br />
-
-        <table id="TheTalentsTable" class="display">
-            <thead>
-                <tr>
-                    <th>Talent Name</th>
-                    <th>Image Profile</th>
-                    <th>Talent Bio</th>
-                    <th>Reknown</th>
-                    <th>Short Name</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-
-        <div id="update"></div>
-        <div id="disqus_thread"></div>
-
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="text-right">
+        <button type="button" class="btn btn-primary btn-lg" onclick="location.href='@Url.Action("CreateTalent", "Talents")'" style="margin:5px;">Create Talent +</button>
     </div>
+    <br />
+
+    <table id="TheTalentsTable" class="display">
+        <thead>
+            <tr>
+                <th>Talent Name</th>
+                <th>Image Profile</th>
+                <th>Talent Bio</th>
+                <th>Reknown</th>
+                <th>Short Name</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <div id="update"></div>
+
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Body -->
+            <div class="modal-body w-100 text-center">
+                <!-- We display the details entered by the user here -->
+                <h1><strong class="text-dark">Are you sure?</strong></h1>
+                <br />
+                <!-- We display the details entered by the user here -->
+                <h4 id="deleteModalName" style="margin: 0 auto;"></h4>
+                <br />
+                <h4 id="deleteModalShortName" style="margin: 0 auto;"></h4>
+                <br />
+                <h4 id="deleteModalBio" style="margin: 0 auto;"></h4>
+                <br />
+                <h4 id="deleteModalReknown" style="margin: 0 auto;"></h4>
+                <br />
+                <br />
+                <button type="button" class="btn btn-lg mr-5 btn-outline-dark" data-dismiss="modal">Cancel</button>
+                <button id="modalDeleteButton" type="submit" class="btn btn-danger btn-lg" data-dismiss="modal">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
+        let deleteId = 0; // variable to store id for delete api url
         loadTalents();
 
         function loadTalents() {
@@ -55,7 +80,7 @@
                 },
                 success: (function (data) {
                     var urlForCloudImage = "https://testbucketcscnew1.s3.amazonaws.com/";
-                    $dataTable = $('#TheTalentsTable').DataTable({
+                    tableData = $('#TheTalentsTable').DataTable({
                         data: data,
                         columns: [
                             { data: 'talentName' },
@@ -80,14 +105,14 @@
                                 "width": "3%",
                                 data: 'talentId',
                                 "render": function (data, type, row, meta, ) {
-                                    return '<a href="/Talents/EditTalent/' + data + '" class="btn btn-info btn-lg" style="border-radius: 8px;" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pen"></i></a>';
+                                    return '<a href="/Talents/UpdateTalent/' + data + '" class="btn btn-info btn-lg" style="border-radius: 8px;" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pen"></i></a>';
                                 }
                             },
                             {
                                 "width": "3%",
                                 data: 'talentId',
                                 "render": function (data, type, row, meta) {
-                                    return '<a class="btn btn-danger btn-lg" style="border-radius: 8px;" type="button" data-toggle="modal" data-target="#confirm-submit" title="Delete"><i class="fa fa-trash" style="color: white;"></i></a>'; //Jinwah
+                                    return '<a class="btn btn-danger btn-lg" style="border-radius: 8px;" type="button" onclick="deleteModal(' + data + ')" data-toggle="modal" data-target="#confirm-delete" title="Delete"><i class="fa fa-trash" style="color: white;"></i></a>'; //Jinwah
                                 }
                             }
                         ],
@@ -132,27 +157,46 @@
             //        $('#update').html(output);
             //    }); //get JSON
             //});
+        }//end of loadTalents
+
+        //Input data into deleteModal
+        function deleteModal(ID) {
+            deleteId = ID; // set deleteId to selected user's ID
+            $.ajax({
+                method: 'GET',
+                url: '/API/Talents/GetTalent/' + ID,
+            }).done(function (data) {
+                $('#deleteModalName').text(data.name);
+                $('#deleteModalShortName').text(data.shortName);
+                $('#deleteModalBio').text(data.bio);
+                $('#deleteModalReknown').text(data.reknown);
+            });
+        }//end of deleteModal
+
+        $('#modalDeleteButton').on('click', function () {
+            jQuery.ajax({
+                method: 'DELETE',
+                url: '/API/Talents/DeleteTalent/' + deleteId
+            }).done(function (data) {
+                alert(data.message)
+
+                setTimeout(function () {
+                    reloadTable(); //call function reloadTable() to reload the datatable after modifying the data
+                }, 1000);
+            }).fail(function (data) {
+                if (data.responseJSON) {
+                    alert(data.responseJSON.message);
+                } else {
+                    alert("Error");
+                }
+            });
+        });//end of $('#deleteButton').on('click'. anonymous function)
+
+        function reloadTable() {
+            $("#table_id tbody tr").remove(); //Remove Client side HTML Data
+            tableData.destroy(); //Destroy the initialized table, so a new one can be loaded
+            loadTalents();  //reload the entire data
         }
-
-
-        //Disqus Integration
-        /**
-        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-        /*
-        var disqus_config = function () {
-        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-        };
-        */
-        (function () { // DON'T EDIT BELOW THIS LINE
-            var d = document, s = d.createElement('script');
-            s.src = 'https://cscassignment2-1.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();
-      
     </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 }
 
