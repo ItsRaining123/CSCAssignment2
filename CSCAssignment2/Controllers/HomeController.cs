@@ -56,6 +56,10 @@ namespace CSCAssignment2.Controllers
         {
             return View();
         }
+        public IActionResult PaymentPage()
+        {
+            return View();
+        }
 
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

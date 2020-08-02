@@ -14,7 +14,41 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="~/css/css-loader.css" rel="stylesheet" />
+    <script src="https://js.stripe.com/v3/"></script>
+    <link href="~/css/index.css" rel="stylesheet" />
+    <link rel="stylesheet" href="StripeElements.css">
+    <link href="~/css/global.css" rel="stylesheet" />
+    <link href="~/css/normalize.css" rel="stylesheet" />
+    <script src="~/js/stripe.js"></script>
+    <style>
+        /**
+        * Shows how you can use CSS to style your Element's container.
+        */
+        .MyCardElement {
+            height: 40px;
+            padding: 10px 12px;
+            width: 100%;
+            color: #32325d;
+            background-color: white;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px 0 #e6ebf1;
+            -webkit-transition: box-shadow 150ms ease;
+            transition: box-shadow 150ms ease;
+        }
 
+        .MyCardElement--focus {
+            box-shadow: 0 1px 3px 0 #cfd7df;
+        }
+
+        .MyCardElement--invalid {
+            border-color: #fa755a;
+        }
+
+        .MyCardElement--webkit-autofill {
+            background-color: #fefde5 !important;
+        }
+    </style>
 </head>
 <body>
     <header>
