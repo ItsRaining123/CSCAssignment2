@@ -291,7 +291,7 @@ namespace CSCAssignment2.APIs
                 }
                 catch (Exception ex)
                 {
-                   BadRequest(new { message = ex.Message });
+                   return BadRequest(new { message = ex.Message });
                 }
             }
             return Ok(new {message =  url});
