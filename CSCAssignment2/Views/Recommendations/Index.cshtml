@@ -1,0 +1,42 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{ }
+
+<div class="text-center">
+    <h1 class="display-4">Recommendations for you </h1>
+    <div class="text-center">
+        <h2>Others you may like</h2>
+        <p id="itemId"></p>
+        <p id="name"></p>
+        <p id="category"></p>
+    </div>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@section Scripts {
+<script>
+    loadRecommendations();
+
+    function loadRecommendations() {
+        $.ajax({
+            method: 'GET',
+            url: '/API/Recommendations/GetRecommendations/',
+            dataType: 'json'
+        }).done(function (data) {
+            console.log(data);
+            for (i = 0; i < data.length; i++)
+            {
+                var obj = data[i];
+                var nameobj = JSON.parse(obj.name);
+                var namecat = JSON.parse(obj.category);
+                $('#itemId').append(obj.id);
+                $('#name').append(nameobj);
+                $('#category').append(namecat);
+            }
+            
+        });
+    }
+</script>
+}
+
