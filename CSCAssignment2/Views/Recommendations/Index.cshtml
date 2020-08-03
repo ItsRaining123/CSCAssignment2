@@ -7,6 +7,19 @@
     <h1 class="display-4">Recommendations for you </h1>
     <div class="text-center">
         <h2>Others you may like</h2>
+
+        <table id="recommendationsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Item Id</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
         <p id="itemId"></p>
         <p id="name"></p>
         <p id="category"></p>
@@ -25,15 +38,34 @@
             dataType: 'json'
         }).done(function (data) {
             console.log(data);
-            for (i = 0; i < data.length; i++)
-            {
-                var obj = data[i];
-                var nameobj = JSON.parse(obj.name);
-                var namecat = JSON.parse(obj.category);
-                $('#itemId').append(obj.id);
-                $('#name').append(nameobj);
-                $('#category').append(namecat);
-            }
+            tableData = $('#recommendationsTable').DataTable({
+                data: data,
+                columns: [
+                    { data: 'id' },
+                    {
+                        data: 'image',
+                        "width": "3%",
+                        "render": function (data, type, row, meta) {
+                            return '<img src=' + data + ' />';
+                        }
+                    },
+                    { data: 'name' },
+                    { data: 'category' },
+                ],
+                "info": true,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                pageLength: 10
+            });
+
+            //for (i = 0; i < data.length; i++)
+            //{
+            //    var obj = data[i];
+            //    var nameobj = JSON.parse(obj.name);
+            //    var namecat = JSON.parse(obj.category);
+            //    $('#itemId').append(obj.id);
+            //    $('#name').append(nameobj);
+            //    $('#category').append(namecat);
+            //}
             
         });
     }

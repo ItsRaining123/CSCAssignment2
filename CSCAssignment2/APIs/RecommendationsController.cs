@@ -26,7 +26,7 @@ namespace CSCAssignment2.APIs
             //client.Send(new AddPurchase("ifijj", "88dj", cascadeCreate: true));
             //client.Send(new AddPurchase("ljsfjd3231", "88dj", cascadeCreate: true));
 
-            RecommendationResponse recommended = client.Send(new RecommendItemsToUser("ifijj", 2, 
+            RecommendationResponse recommended = client.Send(new RecommendItemsToUser("ifijj", 5, 
                 returnProperties: true, cascadeCreate: true));
             List<object> itemList = new List<object>();
             
@@ -82,18 +82,24 @@ namespace CSCAssignment2.APIs
         public IActionResult AddItemRecommendation([FromForm] IFormCollection data)
         {
             var client = new RecombeeClient("cscassignment-dev", "B9CyvAjpHpIi17aMuwI4FX9nX9KwWd5jmIomld0XqkjgiOLKgcGfGVggbTS5iQQ7");
+            try
+            {
+                string itemId = data["id"];
+                client.Send(new AddItem(itemId));
 
-            string itemId = data["id"];
-            client.Send(new AddItem(itemId));
-
-            client.Send(new SetItemValues(itemId,
-                new Dictionary<string, object>() {
+                client.Send(new SetItemValues(itemId,
+                    new Dictionary<string, object>() {
                     {"name", data["name"]},
                     {"category", data["category"]},
                     {"image", "http://examplesite.com/products/xyz.jpg"},
-                },
-                cascadeCreate: true
-            ));
+                    },
+                    cascadeCreate: true
+                ));
+            } catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+
 
             return Ok(new { message = "Recommendation successfully added" });
 
