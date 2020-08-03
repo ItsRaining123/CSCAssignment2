@@ -21,7 +21,7 @@ namespace CSCAssignment2.APIs
         public PaymentsController(IOptions<StripeOptions> options)
         {
             this.options = options;
-            StripeConfiguration.ApiKey = "sk_test_51GxdLDHq05oyY0YBoHTN18NJHgarUMDCNAHpcBgYhBLseyoKXCOwtB9DtBxRlWJhnCaw1DBZ6QVvCme5g07hcVfP00VqfSJeKC";
+            StripeConfiguration.ApiKey = "";
         }
 
         [HttpGet("config")]
@@ -29,7 +29,7 @@ namespace CSCAssignment2.APIs
         {
             return new ConfigResponse
             {
-                PublishableKey = "pk_test_51GxdLDHq05oyY0YBuWeGqV9t8be2YenHroagMlbxKu8QiuLirUX0GOLM2KT6HosD9HIk5rCfSO9cU9FLEYl1NqLz00P9qTurRI",
+                PublishableKey = "",
             };
         }
 

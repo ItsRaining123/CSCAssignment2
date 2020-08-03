@@ -270,7 +270,7 @@ namespace CSCAssignment2.APIs
                     information.TalentImageURL = photo.FileName;
                     
                     //Check for NSFW image using Clarifai
-                    var clientClarifai = new ClarifaiClient("1e765fbf24954a2b909d0259e0087945");
+                    var clientClarifai = new ClarifaiClient("");
                     var response = await clientClarifai.PublicModels.NsfwModel
                         .Predict(new ClarifaiURLImage("https://testbucketcscnew1.s3.amazonaws.com/" + photo.FileName))
                         .ExecuteAsync();
