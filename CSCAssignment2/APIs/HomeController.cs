@@ -34,7 +34,7 @@ namespace CSCAssignment2.APIs
             _appSettings = appSettings.Value;
         }
 
-        string key = "sk_test_51GxdLDHq05oyY0YBoHTN18NJHgarUMDCNAHpcBgYhBLseyoKXCOwtB9DtBxRlWJhnCaw1DBZ6QVvCme5g07hcVfP00VqfSJeKC"; // input Stripe API Key here
+        string key = ""; // input Stripe API Key here
 
         // GET: api/Home
         [HttpGet]

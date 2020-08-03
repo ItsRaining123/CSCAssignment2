@@ -36,9 +36,9 @@ namespace CSCAssignment2.APIs
             _dynamoClient = dynamoClient;
         }
 
-        string key = "sk_test_51GxdLDHq05oyY0YBoHTN18NJHgarUMDCNAHpcBgYhBLseyoKXCOwtB9DtBxRlWJhnCaw1DBZ6QVvCme5g07hcVfP00VqfSJeKC"; // input Stripe API Key here
-        string customerId = "cus_HlBMiYVkYrzsNG"; // input customer id here
-        string productPrice1 = "price_1HBlswHq05oyY0YBYSWDL0KX"; // input product1 price here
+        string key = ""; // input Stripe API Key here
+        string customerId = ""; // input customer id here
+        string productPrice1 = ""; // input product1 price here
         string subscriptionId = ""; // input subscription id here
         string paymentIntent = ""; // input payment intent here
         private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
@@ -84,6 +84,7 @@ namespace CSCAssignment2.APIs
                 model.SubscriptionId = subscription.Id;
 
                 user.CustomerId = subscription.CustomerId;
+                user.RoleId = 2;
 
                 _putItem.AddNewEntry(subscription.Id, subscription.LatestInvoiceId, user.Id);
                 _database.Users.Update(user);

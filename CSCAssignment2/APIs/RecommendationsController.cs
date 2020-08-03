@@ -17,7 +17,7 @@ namespace CSCAssignment2.APIs
         [HttpGet("GetRecommendations")]
         public IActionResult GetRecommendations()
         {
-            var client = new RecombeeClient("cscassignment-dev", "B9CyvAjpHpIi17aMuwI4FX9nX9KwWd5jmIomld0XqkjgiOLKgcGfGVggbTS5iQQ7");
+            var client = new RecombeeClient("cscassignment-dev", "");
 
             //client.Send(new AddDetailView("ifijj", "88dj", cascadeCreate: true));
             //client.Send(new AddDetailView("ljsfjd3231", "88dj", cascadeCreate: true));
@@ -46,7 +46,7 @@ namespace CSCAssignment2.APIs
         [HttpPost("AddUserRecommendation")]
         public IActionResult AddUserRecommendation([FromForm] IFormCollection data)
         {
-            var client = new RecombeeClient("cscassignment-dev", "B9CyvAjpHpIi17aMuwI4FX9nX9KwWd5jmIomld0XqkjgiOLKgcGfGVggbTS5iQQ7");
+            var client = new RecombeeClient("cscassignment-dev", "");
 
             //client.Send(new AddUserProperty("name", "string"));
             //client.Send(new AddUserProperty("age", "int"));
@@ -81,7 +81,7 @@ namespace CSCAssignment2.APIs
         [HttpPost("AddItemRecommendation")]
         public IActionResult AddItemRecommendation([FromForm] IFormCollection data)
         {
-            var client = new RecombeeClient("cscassignment-dev", "B9CyvAjpHpIi17aMuwI4FX9nX9KwWd5jmIomld0XqkjgiOLKgcGfGVggbTS5iQQ7");
+            var client = new RecombeeClient("cscassignment-dev", "");
             try
             {
                 string itemId = data["id"];
