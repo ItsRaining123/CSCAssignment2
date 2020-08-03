@@ -1,0 +1,92 @@
+﻿<body>
+    <h1></h1>
+    <h2>Add Item Recommendation</h2>
+    <form id="dataForm">
+        <div class="form-group form-group-lg col-md-12">
+            <label for="idInput">Id *</label>
+            <br />
+            <input type="text" class="form-control" id="idInput" name="idInput" />
+        </div>
+        <div class="form-group form-group-lg col-md-12">
+            <label for="nameInput">Name *</label>
+            <br />
+            <input type="text" class="form-control" id="nameInput" name="nameInput" />
+        </div>
+        <div class="form-group form-group-lg col-md-12">
+            <label for="ageInput">
+                Category *
+            </label>
+            <br />
+            <input type="text" class="form-control" id="categoryInput" name="categoryInput" />
+        </div>
+        <div class="form-group col-md-12">
+            <div>
+                <button type="button" class="btn btn-light"
+                        onclick="location.href='/Recommendations/Index'">
+                    Cancel
+                </button>
+                <button type="reset" id="resetButton" class="btn btn-secondary">
+                    Reset
+                </button>
+                <input type="button" name="btn" value="Create" id="createButton" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+</body>
+
+@section Scripts {
+    <style>
+        .error {
+            font-size: 15px;
+            color: red;
+        }
+    </style>
+    <script>
+
+        function WebFormData(inId, inName, inCategory) {
+            this.id = inId
+            this.name = inName;
+            this.category = inCategory;
+        }
+
+        jQuery('#createButton').on('click', function () {
+
+            let collectedId = jQuery('#idInput').val();
+            let collectedName = jQuery('#nameInput').val();
+            let collectedCategory = jQuery('#categoryInput').val();
+
+
+            //Create a object, webFormData by using WebFormData class
+            let webFormData = new WebFormData(collectedId, collectedName, collectedCategory);
+
+            $.ajax({
+                type: 'POST',
+                url: '/API/Recommendations/AddItemRecommendation',
+                data: webFormData,
+                dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
+            }).done(function (data) {
+                console.dir(data);
+                Swal.fire({
+                    title: 'Success',
+                    text: data.message,
+                    icon: 'success'
+                });
+            }).fail(function (data) {
+                if (data.responseJSON) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.responseJSON.message,
+                        icon: 'error'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Unable to create record.',
+                        icon: 'error'
+                    });
+                }
+            });
+        });
+    </script>
+}
