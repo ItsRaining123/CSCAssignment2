@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Amazon.DynamoDBv2;
 using CSCAssignment2.Helpers;
 using CSCAssignment2.Models;
 using CSCAssignment2.Services;
@@ -30,6 +31,9 @@ namespace CSCAssignment1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddAWSService<IAmazonDynamoDB>();
+			services.AddSingleton<IPutItem, PutItem>();
+			services.AddSingleton<IGetItem, GetItem>();
 			services.Configure<CookiePolicyOptions>(options =>
 			{
 				// This lambda determines whether user consent for non-essential cookies is needed for a given request.

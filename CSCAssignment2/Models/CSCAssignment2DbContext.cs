@@ -72,6 +72,12 @@ namespace ExamScriptTS.Models
                     .HasColumnName("Username")
                     .HasMaxLength(45)
                     .IsUnicode(false);
+
+                entity.Property(e => e.CustomerId)
+                    .IsRequired()
+                    .HasColumnName("CustomerId")
+                    .HasMaxLength(45)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity <Talents>(entity =>

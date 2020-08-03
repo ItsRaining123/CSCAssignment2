@@ -4,41 +4,57 @@
 
 <h2>Subscribe to The Life Time Talents!</h2>
 
-<form action="/cart/Subscribe" method="post" id="payment-form">
-    <div class="form-row">
-        <label for="card-element">
-        </label>
-        <div id="card-element">
-            <!-- A Stripe Element will be inserted here. -->
-        </div>
+<form action="/cart/Subscribe/" method="post" id="payment-form1">
+    <button id="subscribeBtn">Subscribe</button>
+</form>
+<br />
 
-        <!-- Used to display Element errors. -->
-        <div id="card-errors" role="alert"></div>
-    </div>
+<form action="/cart/Pause" method="post" id="payment-form2">
+    <button id="btn2">Pause Subscription Plan</button>
+</form>
+<br />
 
-    <button>Subscribe</button>
+<form action="/cart/Resume" method="post" id="payment-form3">
+    <button id="btn3">Resume Subscription Plan</button>
+</form>
+<br />
+
+<form action="/cart/Refund" method="post" id="payment-form4">
+    <button id="btn4">Get Refund</button>
+</form>
+<br />
+
+<form action="/cart/Cancel" method="post" id="payment-form5">
+    <button id="btn5">Cancel Payment</button>
 </form>
 
 <br />
+<form action="/cart/Invoice" method="get" id="payment-form6">
+    <button id="invoiceBtn">Latest Invoice</button>
 
-<form action="/cart/Pause" method="post" id="payment-form">
-    <button>Pause Subscription Plan</button>
 </form>
 
-<br />
+@section Scripts {
+<script>
+    //Declare a JavaScript constant, ID.
+    //This JavaScript constant will contain the numeric id value
+    //which will be extracted from the address bar.
+    const ID = getIdFromAddressBar();
 
-<form action="/cart/Resume" method="post" id="payment-form">
-    <button>Resume Subscription Plan</button>
-</form>
+    //Declare a named function, getIdFromAddressBar
+    function getIdFromAddressBar() {
+        let urlArray = window.location.href.split('/');
+        let id = urlArray[urlArray.length - 1];
+        return id;
+    };//End of getIdFromAddressBar
 
-<br />
+    //Function to append url for form actions
+    $("#subscribeBtn").on("click", function () {
+        $('#payment-form1').attr('action', '/Cart/Subscribe/' + ID).submit();
+    });
 
-<form action="/cart/Refund" method="post" id="payment-form">
-    <button>Get Refund</button>
-</form>
-
-<br />
-
-<form action="/cart/Cancel" method="post" id="payment-form">
-    <button>Cancel Subscription Plan</button>
-</form>
+    $("#invoiceBtn").on("click", function () {
+        $('#payment-form6').attr('action', '/Cart/Invoice/' + ID).submit();
+    });
+</script>
+}

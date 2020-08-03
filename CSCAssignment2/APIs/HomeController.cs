@@ -10,6 +10,7 @@ using CSCAssignment2.Helpers;
 using CSCAssignment2.Services;
 using Microsoft.Extensions.Options;
 using ExamScriptTS.Models;
+using Stripe;
 
 namespace CSCAssignment2.APIs
 {
@@ -33,7 +34,9 @@ namespace CSCAssignment2.APIs
             _appSettings = appSettings.Value;
         }
 
-        // GET: api/AccountCreation
+        string key = "sk_test_51GxdLDHq05oyY0YBoHTN18NJHgarUMDCNAHpcBgYhBLseyoKXCOwtB9DtBxRlWJhnCaw1DBZ6QVvCme5g07hcVfP00VqfSJeKC"; // input Stripe API Key here
+
+        // GET: api/Home
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Users>>> GetUsers()
         {
@@ -51,6 +54,7 @@ namespace CSCAssignment2.APIs
             user.FullName = data["fullName"];
             user.Username = data["userid"];
             user.RoleId = int.Parse(data["roleId"]);
+            user.CustomerId = "";
             try
             {
                 await _userService.CreateAsync(user, data["password"]);
@@ -67,7 +71,7 @@ namespace CSCAssignment2.APIs
             });
         }//End of CreateUserAsync web api
 
-        //GET api/Home/GetRolesForInputControls
+        //GET api/Home/GetRoles
         [HttpGet("GetRoles")]
         public IActionResult GetRoles()
         {
@@ -147,7 +151,7 @@ namespace CSCAssignment2.APIs
             return CreatedAtAction("GetUsers", new { id = users.Id }, users);
         }
 
-        // DELETE: api/AccountCreation/5
+        // DELETE: api/Home/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Users>> DeleteUsers(int id)
         {

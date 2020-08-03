@@ -44,7 +44,7 @@ namespace CSCAssignment2.APIs
             _appSettings = appSettings.Value;
         }
 
-        // GET api/<TalentsController>/5
+        // GET api/<TalentsController>
         [HttpGet]
         public IActionResult Get()
         {
