@@ -19,6 +19,7 @@
                 <div id="loader" class="loader loader-default is-active "></div>
 
                 <div class="text-right">
+                    <a href="/Cart/Index/@identity.FindFirst("userid").Value" type="button" class="btn btn-primary btn-lg" style="margin:5px;">Upgrade to Comment!<span></span></a>
                     <button type="button" class="btn btn-primary btn-lg" onclick="location.href='@Url.Action("CreateTalent", "Talents")'" style="margin:5px;">Create Talent +</button>
                 </div>
                 <br />
@@ -59,6 +60,7 @@
 
 @section Scripts {
     <script>
+        let deleteId = 0; // variable to store id for delete api url
         loadTalents();
 
         function loadTalents() {
@@ -74,7 +76,7 @@
                 },
                 success: (function (data) {
                     var urlForCloudImage = "https://testbucketcscnew1.s3.amazonaws.com/";
-                    $dataTable = $('#TheTalentsTable').DataTable({
+                    tableData = $('#TheTalentsTable').DataTable({
                         data: data,
                         columns: [
                             { data: 'talentName' },
@@ -99,14 +101,14 @@
                                 "width": "3%",
                                 data: 'talentId',
                                 "render": function (data, type, row, meta, ) {
-                                    return '<a href="/Talents/EditTalent/' + data + '" class="btn btn-info btn-lg" style="border-radius: 8px;" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pen"></i></a>';
+                                    return '<a href="/Talents/UpdateTalent/' + data + '" class="btn btn-info btn-lg" style="border-radius: 8px;" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pen"></i></a>';
                                 }
                             },
                             {
                                 "width": "3%",
                                 data: 'talentId',
                                 "render": function (data, type, row, meta) {
-                                    return '<a class="btn btn-danger btn-lg" style="border-radius: 8px;" type="button" data-toggle="modal" data-target="#confirm-submit" title="Delete"><i class="fa fa-trash" style="color: white;"></i></a>'; //Jinwah
+                                    return '<a class="btn btn-danger btn-lg" style="border-radius: 8px;" type="button" onclick="deleteModal(' + data + ')" data-toggle="modal" data-target="#confirm-delete" title="Delete"><i class="fa fa-trash" style="color: white;"></i></a>'; //Jinwah
                                 }
                             }
                         ],
@@ -116,6 +118,45 @@
                     });
                 })
             }); //End of ajax().done() method
+        }//end of loadTalents
+
+        //Input data into deleteModal
+        function deleteModal(ID) {
+            deleteId = ID; // set deleteId to selected user's ID
+            $.ajax({
+                method: 'GET',
+                url: '/API/Talents/GetTalent/' + ID,
+            }).done(function (data) {
+                $('#deleteModalName').text(data.name);
+                $('#deleteModalShortName').text(data.shortName);
+                $('#deleteModalBio').text(data.bio);
+                $('#deleteModalReknown').text(data.reknown);
+            });
+        }//end of deleteModal
+
+        $('#modalDeleteButton').on('click', function () {
+            jQuery.ajax({
+                method: 'DELETE',
+                url: '/API/Talents/DeleteTalent/' + deleteId
+            }).done(function (data) {
+                alert(data.message)
+
+                setTimeout(function () {
+                    reloadTable(); //call function reloadTable() to reload the datatable after modifying the data
+                }, 1000);
+            }).fail(function (data) {
+                if (data.responseJSON) {
+                    alert(data.responseJSON.message);
+                } else {
+                    alert("Error");
+                }
+            });
+        });//end of $('#deleteButton').on('click'. anonymous function)
+
+        function reloadTable() {
+            $("#table_id tbody tr").remove(); //Remove Client side HTML Data
+            tableData.destroy(); //Destroy the initialized table, so a new one can be loaded
+            loadTalents();  //reload the entire data
         }
     </script>
 }

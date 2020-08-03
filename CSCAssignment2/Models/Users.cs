@@ -12,5 +12,6 @@ namespace CSCAssignment2.Models
         public Approles Role { get; set; }
         public byte[] PasswordSalt { get; set; }
         public byte[] PasswordHash { get; set; }
+        public string CustomerId { get; set; }
     }
 }
